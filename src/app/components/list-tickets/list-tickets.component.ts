@@ -16,6 +16,7 @@ import { TicketParam } from '../../core/interfaces/ticketParam.interface';
 import { TicketDetail } from '../../core/interfaces/ticketDetail.interface';
 import { SearchTicketsComponent } from '../search-tickets/search-tickets.component';
 import { Cities } from '../../core/interfaces/cities.interface';
+import { AlertsService } from '../../core/services/alerts.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
   private activateRoute = inject(ActivatedRoute);
   private ticketSvc = inject(TicketsService);
   private route = inject(Router);
+  private alertSvc = inject(AlertsService);
 
 
   origen: string = '';
@@ -132,8 +134,8 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.listTicketsFilter = data;
       },
-      error: () => {
-
+      error: (error) => {
+        this.alertSvc.Error(error);
       }
     })
   }

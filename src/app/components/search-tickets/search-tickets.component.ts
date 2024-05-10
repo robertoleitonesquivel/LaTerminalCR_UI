@@ -122,7 +122,10 @@ export class SearchTicketsComponent implements OnInit, OnDestroy {
     let data = this.form.value;
     localStorage.setItem('origen', data.from.name);
     localStorage.setItem('destino', data.to.name);
-    const travelDateFormatted = `${data.travelDate.getFullYear()}-${(data.travelDate.getMonth() + 1).toString().padStart(2, '0')}-${data.travelDate.getDate().toString().padStart(2, '0')}`;
+    let travelDateFormatted = data.travelDate;
+    if(typeof travelDateFormatted !== 'string'){
+      travelDateFormatted = `${data.travelDate.getFullYear()}-${(data.travelDate.getMonth() + 1).toString().padStart(2, '0')}-${data.travelDate.getDate().toString().padStart(2, '0')}`;
+    }
 
     if (this.isList) {
       this.search.emit({
