@@ -1,0 +1,20 @@
+.search {
+  width: 50%;
+  margin: auto;
+  margin-top: 100px;
+  mat-form-field {
+    width: 100%;
+  }
+  mat-card-header {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+  mat-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
