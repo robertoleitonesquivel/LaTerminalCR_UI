@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 
+
 import { TicketFilter } from '../../core/interfaces/ticketFilter.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListTicketData } from '../../core/interfaces/list-Ticket.interface';
@@ -13,12 +14,14 @@ import { TicketsService } from '../../core/services/tickets.service';
 import { TicketDetailParam } from '../../core/interfaces/ticketdetailParam.interface';
 import { TicketParam } from '../../core/interfaces/ticketParam.interface';
 import { TicketDetail } from '../../core/interfaces/ticketDetail.interface';
+import { SearchTicketsComponent } from '../search-tickets/search-tickets.component';
+import { Cities } from '../../core/interfaces/cities.interface';
 
 
 @Component({
   selector: 'app-list-tickets',
   standalone: true,
-  imports: [MatTabsModule, MatCardModule, MatButtonModule, MatIconModule, CommonModule, MatDividerModule],
+  imports: [MatTabsModule, MatCardModule, MatButtonModule, MatIconModule, CommonModule, MatDividerModule, SearchTicketsComponent],
   templateUrl: './list-tickets.component.html',
   styleUrl: './list-tickets.component.scss'
 })
@@ -35,6 +38,7 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
   origen: string = '';
   destino: string = '';
   listTicketsFilter: TicketFilter[] = [];
+  listCities: Cities[] = [];
   asientos: TicketDetail[] = [];
   asientosSelected: TicketDetail[] = [];
   paramTicketFilter!: TicketParam;
@@ -54,6 +58,15 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
     const data = this.activateRoute.snapshot.data['ListTicketResolve'] as ListTicketData;
     this.listTicketsFilter = data.tickets;
     this.paramTicketFilter = data.param;
+    this.listCities = data.cities ?? [];
+  }
+
+  getEmptySeats(count: number): any[] {
+    return new Array(Math.max(0, count));
+  }
+
+  getSeatsForRow(rowNumber: number): any[] {
+    return this.asientos.filter(seat => seat.position.y === rowNumber);
   }
 
   public convertHour(_seconds: number): string {
@@ -112,6 +125,17 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
 
   public next(): void {
     this.route.navigate(['/']);
+  }
+
+  public search(_ticketFilter: TicketParam): void {
+    this.ticketSvc.GetTickets(_ticketFilter).subscribe({
+      next: (data) => {
+        this.listTicketsFilter = data;
+      },
+      error: () => {
+
+      }
+    })
   }
 
 

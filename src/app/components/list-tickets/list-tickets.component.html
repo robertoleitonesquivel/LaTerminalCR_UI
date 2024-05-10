@@ -4,13 +4,15 @@
     <br />
     <mat-divider></mat-divider>
     <br />
-    <button mat-raised-button (click)="next()" color="warning">
-      <mat-icon fontIcon="search"></mat-icon>Seguir buscando
-    </button>
   </section>
 
   <mat-tab-group #matTabGroup>
     <mat-tab label="Ruta">
+
+      <div>
+        <app-search-tickets [isList]="true" [cities]="listCities" [data]="paramTicketFilter" (search)="search($event)" />
+      </div>
+
       <div class="card-header">
         <div>
           Compañia
@@ -112,22 +114,31 @@
         <button class="Seleccionado">Seleccionado</button>
       </section>
 
+
       <section class="bus">
-
-        <div class="front"></div>
+        <div class="frente"></div>
         <div class="body">
-          @for (asiento of asientos; track $index) {
-          @if(asiento.seat){
-          <button [ngClass]="color(asiento)" [disabled]="asiento.occupied"
-            (click)="Select(asiento)">{{asiento.seat}}</button>
-          @if(asiento.position.x === 17){
-          <br />
+          @for( row of [4, 3,1, 0] ; track $index){
+          <div class="row">
+            @for (seat of getSeatsForRow(row); track $index) {
+            @if(seat.seat){
+            <div class="seat" (click)="Select(seat)" [ngClass]="color(seat)">
+              {{ seat.seat }}
+            </div>
+            }@else{
+            <div class="empty"></div>
+            }
+            }
+            @for (_ of getEmptySeats(1 - getSeatsForRow(row).length); track $index) {
+            <div class="empty"></div>
+            }
+          </div>
+          @if(row === 3){
+          <div class="aisle"></div>
           }
-          }}
+          }
         </div>
-        <div class="back"></div>
-
-
+        <div class="footer"></div>
       </section>
 
       <section class="card-footer">
