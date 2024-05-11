@@ -69,16 +69,23 @@ export class SearchTicketsComponent implements OnInit, OnDestroy {
     this.onLoad();
   }
 
+  private GetDate(): Date {
+    if (this.isList) {
+      const date: string[] = this.data.travelDate.split('-');
+      return new Date(+date[0], +date[1] - 1, +date[2]);
+    }
+    return new Date();
+  }
+
   private onLoad(): void {
     this.form = this.fb.group({
       from: ['', [Validators.required]],
       to: ['', [Validators.required]],
       affiliateCode: 'DDE',
-      travelDate: [new Date(), [Validators.required]]
+      travelDate: [this.GetDate(), [Validators.required]]
     });
 
     if (this.isList) {
-      this.form.patchValue(this.data);
       this.listCities = this.cities;
       this.form.controls['from'].setValue(this.listCities.find(x => x.id === this.data.from));
       this.form.controls['to'].setValue(this.listCities.find(x => x.id === this.data.to));
@@ -123,7 +130,7 @@ export class SearchTicketsComponent implements OnInit, OnDestroy {
     localStorage.setItem('origen', data.from.name);
     localStorage.setItem('destino', data.to.name);
     let travelDateFormatted = data.travelDate;
-    if(typeof travelDateFormatted !== 'string'){
+    if (typeof travelDateFormatted !== 'string') {
       travelDateFormatted = `${data.travelDate.getFullYear()}-${(data.travelDate.getMonth() + 1).toString().padStart(2, '0')}-${data.travelDate.getDate().toString().padStart(2, '0')}`;
     }
 
@@ -148,6 +155,7 @@ export class SearchTicketsComponent implements OnInit, OnDestroy {
 
 
   }
+
   public getDetailCitie(_property: string): void {
     let data = this.form.controls[_property].value as Cities;
     this.citiesSvc.GetDetailCities(data.id).subscribe({
