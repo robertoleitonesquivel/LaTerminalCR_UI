@@ -15,23 +15,24 @@ export const listTicketsResolver: ResolveFn<ListTicketData> = (route: ActivatedR
   const ticketparam = { ...route.queryParams } as TicketParam;
 
   return forkJoin({
-    Cities: citiesSvc.GetCities(),
-    Tickets: ticketsSvc.GetTickets(ticketparam)
+    Cities: citiesSvc.GetCities()
+      .pipe(
+        catchError(error => {
+          alertSvc.Error(error);
+          return of([])
+        })),
+    Tickets: ticketsSvc.GetTickets(ticketparam).pipe(
+      catchError(error => {
+        alertSvc.Error(error);
+        return of([])
+      })),
   }).pipe(map(response => {
     return {
-      tickets: response.Tickets,
+      tickets: response?.Tickets,
       param: ticketparam,
-      cities: response.Cities
+      cities: response?.Cities
     } as ListTicketData
-  }),
-    catchError(error => {
-      alertSvc.Error(error);
-      return of({
-        tickets: [],
-        param: ticketparam,
-        cities: []
-      } as ListTicketData);
-    }));
+  }));
 
 
 
