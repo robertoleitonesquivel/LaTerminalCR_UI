@@ -98,7 +98,7 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
         this.asientosSelected = [];
       },
       error: (error) => {
-
+        this.alertSvc.Error(error);
       }
     })
   }

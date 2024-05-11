@@ -115,7 +115,7 @@ export class SearchTicketsComponent implements OnInit, OnDestroy {
   }
 
   public displayFn(_citie: Cities): string {
-    return _citie.name;
+    return _citie?.name ?? '';
   }
 
   public searchTickets(): void {
