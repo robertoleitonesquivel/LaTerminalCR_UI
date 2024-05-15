@@ -55,12 +55,12 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
   }
 
   private loadInitialData(): void {
-    this.origen = localStorage.getItem('origen') as string;
-    this.destino = localStorage.getItem('destino') as string;
     const data = this.activateRoute.snapshot.data['ListTicketResolve'] as ListTicketData;
     this.listTicketsFilter = data.tickets;
     this.paramTicketFilter = data.param;
     this.listCities = data.cities ?? [];
+    this.origen = this.listCities.find(x => x.id === this.paramTicketFilter.from)?.name ?? '';
+    this.destino = this.listCities.find(x => x.id === this.paramTicketFilter.to)?.name ?? '';
   }
 
   getEmptySeats(count: number): any[] {
@@ -98,7 +98,7 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
         this.asientosSelected = [];
       },
       error: (error) => {
-        this.alertSvc.Error(error);
+        this.alertSvc.ShowMessage(error);
       }
     })
   }
@@ -133,9 +133,12 @@ export class ListTicketsComponent implements OnInit, OnDestroy {
     this.ticketSvc.GetTickets(_ticketFilter).subscribe({
       next: (data) => {
         this.listTicketsFilter = data;
+        this.route.navigate(['list-tickets']);
+        this.origen = this.listCities.find(x => x.id === _ticketFilter.from)?.name ?? '';
+        this.destino = this.listCities.find(x => x.id === _ticketFilter.to)?.name ?? '';
       },
       error: (error) => {
-        this.alertSvc.Error(error);
+        this.alertSvc.ShowMessage(error);
       }
     })
   }

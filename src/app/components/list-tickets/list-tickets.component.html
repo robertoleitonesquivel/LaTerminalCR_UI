@@ -1,6 +1,6 @@
 <section>
   <section class="header">
-    <h1>Boletos de autobús desde {{origen}} - {{destino}}</h1>
+    <h1>Boletos de autobús desde {{ origen }} - {{ destino }}</h1>
     <br />
     <mat-divider></mat-divider>
     <br />
@@ -8,54 +8,46 @@
 
   <mat-tab-group #matTabGroup>
     <mat-tab label="Ruta">
-
       <div>
-        <app-search-tickets [isList]="true" [cities]="listCities" [data]="paramTicketFilter" (search)="search($event)" />
+        <app-search-tickets [isList]="true" [cities]="listCities" [data]="paramTicketFilter"
+          (search)="search($event)" />
       </div>
 
       <div class="card-header">
-        <div>
-          Compañia
-        </div>
-        <div>
-          Salida prevista
-        </div>
-        <div>
-          Origen / Destino
-        </div>
-        <div>
-          Clase
-        </div>
-        <div>
-          Precio
-        </div>
-        <div>
-
-        </div>
+        <div>Compañia</div>
+        <div>Salida prevista</div>
+        <div>Origen / Destino</div>
+        <div>Clase</div>
+        <div>Precio</div>
+        <div></div>
       </div>
       @for (ticket of listTicketsFilter; track $index) {
       <section class="list-card">
         <div>
-          {{ticket.company.name}}
+          {{ ticket.company.name }}
         </div>
         <div>
-          <p class="icon">{{ticket.departure.time}} <mat-icon fontIcon="arrow_forward"></mat-icon>
-            {{ticket.arrival.time}}
+          <p class="icon">
+            {{ ticket.departure.time }}
+            <mat-icon fontIcon="arrow_forward"></mat-icon>
+            {{ ticket.arrival.time }}
           </p>
-          <p class="icon">{{convertHour(ticket.travelDuration)}}</p>
+          <p class="icon">{{ convertHour(ticket.travelDuration) }}</p>
         </div>
         <div>
-          <p>{{ticket.from.name}}</p>
-          <p>{{ticket.to.name}}</p>
+          <p>{{ ticket.from.name }}</p>
+          <p>{{ ticket.to.name }}</p>
         </div>
         <div>
-          {{ticket.seatClass}}
+          {{ ticket.seatClass }}
         </div>
         <div>
-          <strong>${{ticket.price.price | number: "1.2-2"}}</strong>
+          <strong>${{ ticket.price.price | number : "1.2-2" }}</strong>
         </div>
         <div>
-          <button mat-raised-button color="primary" (click)="detail(ticket)">Elejir IDA</button>
+          <button mat-raised-button color="primary" (click)="detail(ticket)">
+            Elejir IDA
+          </button>
         </div>
       </section>
       }
@@ -63,48 +55,44 @@
     <mat-tab label="Sillones" [disabled]="!ticketDetail">
       @if(ticketDetail){
       <div class="card-header">
-        <div>
-          Compañia
-        </div>
-        <div>
-          Salida prevista
-        </div>
-        <div>
-          Origen / Destino
-        </div>
-        <div>
-          Clase
-        </div>
-        <div>
-          Precio
-        </div>
+        <div>Compañia</div>
+        <div>Salida prevista</div>
+        <div>Origen / Destino</div>
+        <div>Clase</div>
+        <div>Precio</div>
       </div>
       <section class="list-card">
         <div>
-          <p>{{ticketDetail.company.name}}</p>
-          <p><strong>Fecha: </strong>{{ticketDetail.departure.date | date: 'dd-MM-yyyy'}}</p>
-        </div>
-        <div>
-          <p class="icon">{{ticketDetail.departure.time}} <mat-icon fontIcon="arrow_forward"></mat-icon>
-            {{ticketDetail.arrival.time}}
+          <p>{{ ticketDetail.company.name }}</p>
+          <p>
+            <strong>Fecha: </strong>{{ ticketDetail.departure.date | date : "dd-MM-yyyy" }}
           </p>
-          <p class="icon">{{convertHour(ticketDetail.travelDuration)}}</p>
         </div>
         <div>
-          <p>{{ticketDetail.from.name}}</p>
-          <p>{{ticketDetail.to.name}}</p>
+          <p class="icon">
+            {{ ticketDetail.departure.time }}
+            <mat-icon fontIcon="arrow_forward"></mat-icon>
+            {{ ticketDetail.arrival.time }}
+          </p>
+          <p class="icon">{{ convertHour(ticketDetail.travelDuration) }}</p>
         </div>
         <div>
-          {{ticketDetail.seatClass}}
+          <p>{{ ticketDetail.from.name }}</p>
+          <p>{{ ticketDetail.to.name }}</p>
         </div>
         <div>
-          <h1>${{ticketDetail.price.price | number: "1.2-2"}}</h1>
+          {{ ticketDetail.seatClass }}
+        </div>
+        <div>
+          <h1>${{ ticketDetail.price.price | number : "1.2-2" }}</h1>
         </div>
       </section>
       }
 
       <section class="title">
-        <h2>Seleccione el número de pasajeros marcando los asientos deseados</h2>
+        <h2>
+          Seleccione el número de pasajeros marcando los asientos deseados
+        </h2>
         <mat-divider></mat-divider>
       </section>
 
@@ -114,29 +102,31 @@
         <button class="Seleccionado">Seleccionado</button>
       </section>
 
-
       <section class="bus">
         <div class="frente"></div>
         <div class="body">
-          @for( row of [4, 3,1, 0] ; track $index){
-          <div class="row">
-            @for (seat of getSeatsForRow(row); track $index) {
-            @if(seat.seat){
-            <div class="seat" (click)="Select(seat)" [ngClass]="color(seat)">
-              {{ seat.seat }}
-            </div>
-            }@else{
-            <div class="empty"></div>
-            }
-            }
-            @for (_ of getEmptySeats(1 - getSeatsForRow(row).length); track $index) {
-            <div class="empty"></div>
-            }
-          </div>
-          @if(row === 3){
-          <div class="aisle"></div>
+
+          @for( row of [4, 3, 2, 1, 0] ; track $index){
+
+              <div class="row">
+                @if(row !== 2){
+                    @for (seat of getSeatsForRow(row); track $index) {
+                      @if(seat.seat){
+                        <div class="seat" (click)="Select(seat)" [ngClass]="color(seat)">
+                            {{ seat.seat }}
+                        </div>
+                      }@else{
+                        <div class="empty"></div>
+                      }
+                    }
+                  }
+              </div>
+
+              @if(row === 2){
+                <div class="aisle"></div>
+              }
           }
-          }
+
         </div>
         <div class="footer"></div>
       </section>
@@ -144,13 +134,12 @@
       <section class="card-footer">
         <div>
           <p>PARTIDA</p>
-          <p>Sillones seleccionados: </p>
+          <p>Sillones seleccionados:</p>
         </div>
         @for (asiento of asientosSelected; track $index) {
-        <button class="color-seleccionado">{{asiento.seat}}</button>
+        <button class="color-seleccionado">{{ asiento.seat }}</button>
         }
       </section>
-
     </mat-tab>
     <mat-tab label="Pago"> Content 3 </mat-tab>
   </mat-tab-group>

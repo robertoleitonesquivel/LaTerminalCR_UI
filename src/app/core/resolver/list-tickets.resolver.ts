@@ -7,6 +7,7 @@ import { catchError, forkJoin, map, of } from 'rxjs';
 import { ListTicketData } from '../interfaces/list-Ticket.interface';
 import { CitiesService } from '../services/cities.service';
 import { AlertsService } from '../services/alerts.service';
+import { ErrorMessage } from '../interfaces/errorMessage.interface';
 
 export const listTicketsResolver: ResolveFn<ListTicketData> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const ticketsSvc = inject(TicketsService);
@@ -17,13 +18,13 @@ export const listTicketsResolver: ResolveFn<ListTicketData> = (route: ActivatedR
   return forkJoin({
     Cities: citiesSvc.GetCities()
       .pipe(
-        catchError(error => {
-          alertSvc.Error(error);
+        catchError((error: ErrorMessage) => {
+          alertSvc.ShowMessage(error);
           return of([])
         })),
     Tickets: ticketsSvc.GetTickets(ticketparam).pipe(
-      catchError(error => {
-        alertSvc.Error(error);
+      catchError((error: ErrorMessage) => {
+        alertSvc.ShowMessage(error);
         return of([])
       })),
   }).pipe(map(response => {
